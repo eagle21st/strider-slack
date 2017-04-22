@@ -4,6 +4,7 @@ var basicTemplate = function(icon, message) {
 
 module.exports = {
   webhookURL: String,
+  proxyURL: String,
   channel: {
     type: String,
     default: '#general'

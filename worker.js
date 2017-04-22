@@ -1,7 +1,7 @@
 var ejs = require('ejs')
   , _ = require('lodash')
   , Entities = require('html-entities').XmlEntities
-  , Slack = require('slackihook')
+  , Slack = require('node-slack');
 
 module.exports = {
   init: function (config, job, context, cb) {
@@ -62,7 +62,11 @@ function slackPOST(io, job, data, context, config, phase) {
     };
     entities = new Entities();
     var msg = entities.decode(compile(config[phase+'_'+result+'_message']));
-    slack = new Slack(config.webhookURL);
+    if (config.proxyURL != null && config.proxyURL != '') {
+      slack = new Slack(config.webhookURL, { proxy: config.proxyURL });
+    } else {
+      slack = new Slack(config.webhookURL);
+    }
     var sendObject = {
       channel: config.channel,
       username: compile(config.username),

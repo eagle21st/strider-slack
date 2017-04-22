@@ -2,14 +2,18 @@
 
 var fs = require('fs');
 var path = require('path');
-var Slack = require('slackihook');
+var Slack = require('node-slack');
 
 module.exports = {
   config: require('./schema'),
   
   globalRoutes: function (app) {
     app.post('/test', function (req, res) {
-      var slack = new Slack(req.body.config.webhookURL);
+      if (req.body.config.proxyURL != null && req.body.config.proxyURL != '') {
+        var slack = new Slack(req.body.config.webhookURL, { proxy: req.body.config.proxyURL });
+      } else {
+        var slack = new Slack(req.body.config.webhookURL);
+      }
       
       slack.send({
         channel: req.body.config.channel,

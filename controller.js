@@ -49,13 +49,13 @@ app.controller('SlackController', ['$scope', '$http', function ($scope, $http) {
       $scope.testing = true;
       $http.post('/ext/slack/test', {
         config: $scope.config
-      }).success(function(data, status, headers, config) {
+      }).then(function(data, status, headers, config) {
         alert('Looks good from here. Check your Slack!')
-      }).error(function(data, status, headers, config) {
-        alert(data)
-      })['finally'](function() {
         $scope.testing = false;
-      })
+      }, function(data, status, headers, config) {
+        alert(data);
+        $scope.testing = false;
+      });
     } else {
       alert('Webhook URL is required')
     }
